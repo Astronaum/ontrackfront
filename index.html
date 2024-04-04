@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>OnTrack - Création d'intervention</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+
+        font-family: sans-serif;
+      }
+
+      div[role='group'] {
+        margin-bottom: 8px;
+      }
+
+      main {
+        min-height: 100dvh;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      form {
+        max-width: min(550px, 90dvw);
+      }
+
+      label {
+        margin-bottom: 4px;
+
+        font-size: 15px;
+
+        display: inline-block;
+      }
+
+      input {
+        padding: 8px 12px;
+        width: 100%;
+
+        font-size: 16px;
+
+        display: block;
+
+        background-color: whitesmoke;
+        border: none;
+        border-radius: 4px;
+      }
+
+      button {
+        margin-top: 4px;
+        padding: 8px 12px;
+        width: 100%;
+        font-size: 16px;
+        color: white;
+
+        background-color: blue;
+        border: none;
+        border-radius: 4px;
+
+        cursor: pointer;
+      }
+
+      dialog {
+        border: 1px solid whitesmoke;
+        border-radius: 4px;
+      }
+
+      dialog h2 {
+        margin: 0;
+
+        font-size: 20px;
+      }
+    </style>
+
+    <script type="module">
+      var Elements = /** @type {const} */ ({
+        Name: 'Name',
+        Company: 'Company',
+        Phone: 'Phone',
+        File: 'File',
+        EquipmentId: 'EquipmentId',
+        LoadingDialog: 'LoadingDialog',
+        SuccessDialog: 'SuccessDialog',
+        ExceptionDialog: 'ExceptionDialog',
+      })
+
+      var Inputs = {
+        [Elements.Name]: 'name',
+        [Elements.Company]: 'company',
+        [Elements.Phone]: 'phone',
+        [Elements.File]: 'file',
+        [Elements.EquipmentId]: 'equipment_id',
+      }
+
+      var Dialogs = {
+        [Elements.LoadingDialog]: 'loading-dialog',
+        [Elements.SuccessDialog]: 'success-dialog',
+        [Elements.ExceptionDialog]: 'exception-dialog',
+      }
+
+      var Ids = { ...Inputs, ...Dialogs }
+
+      var References = Object.fromEntries(
+        Object.values(Elements).map((key) => [
+          key,
+          document.getElementById(Ids[key]),
+        ])
+      )
+
+      var forbiddens = [undefined, null, 'undefined', 'null', '']
+
+      var url = new URL(window.location)
+
+      var prefilledByLocalStorage = [
+        Elements.Name,
+        Elements.Company,
+        Elements.Phone,
+      ]
+
+      var prefilledBySearchParams = [Elements.EquipmentId]
+
+      for (var key of prefilledByLocalStorage) {
+        var value = localStorage.getItem(Inputs[key])
+
+        if (!forbiddens.includes(value))
+          References[key].setAttribute('value', value)
+      }
+
+      for (var key of prefilledBySearchParams) {
+        var value = url.searchParams.get(Inputs[key])
+
+        if (!forbiddens.includes(value))
+          References[key].setAttribute('value', value)
+      }
+
+      /**
+       * Make modals unclossable
+       */
+      Object.keys(Dialogs).forEach(
+        (key) => (References[key].oncancel = (event) => event.preventDefault())
+      )
+
+      form.addEventListener(
+        'submit',
+        /**
+         * @param {SubmitEvent} event
+         */
+        (event) => {
+          event.preventDefault()
+
+          var formData = new FormData(event.currentTarget)
+
+          for (var key of prefilledByLocalStorage)
+            localStorage.setItem(Inputs[key], formData.get(Inputs[key]))
+
+          var loading = References[Elements.LoadingDialog]
+
+          loading.showModal()
+
+          fetch('https://oncore-preprod-api.cloud.optimiz-network.fr/api/interventions', {
+            method: 'POST',
+            body: formData,
+          })
+            .then((response) => {
+              loading.close()
+
+              var dialog = response.ok
+                ? References[Elements.SuccessDialog]
+                : References[Elements.ExceptionDialog]
+
+              dialog.showModal()
+            })
+            .catch((error) => {
+              loading.close()
+              References[Elements.ExceptionDialog].showModal()
+            })
+        }
+      )
+    </script>
+  </head>
+
+  <body>
+    <main>
+      <section>
+        <h1>OnTrack - Création d'intervention</h1>
+
+        <form id="form">
+          <div role="group">
+            <label for="name">Nom</label>
+            <input id="name" name="name" type="text" required />
+          </div>
+
+          <div role="group">
+            <label for="company">Entreprise</label>
+            <input id="company" name="company" type="text" required />
+          </div>
+
+          <div role="group">
+            <label for="phone">Téléphone</label>
+            <input id="phone" name="phone" type="tel" required/>
+          </div>
+
+          <div role="group">
+            <label for="file">Photo</label>
+            <input id="file" name="file" type="file" capture required/>
+          </div>
+
+          <div style="display: none; visibility: hidden" role="group">
+            <label for="equipment_id">Device ID</label>
+            <input id="equipment_id" name="equipment_id" type="string" />
+          </div>
+
+          <button type="submit">Enregistrer</button>
+        </form>
+
+        <dialog id="loading-dialog">
+          <h2>Chargement...</h2>
+        </dialog>
+
+        <dialog id="success-dialog">
+          <h2>Intervention créée</h2>
+<!--  button to close the tab-->
+        </dialog>
+
+        <dialog id="exception-dialog">
+          <h2>Erreur</h2>
+<!--     check that is non blocking, button to try again      -->
+        </dialog>
+      </section>
+    </main>
+  </body>
+</html>
