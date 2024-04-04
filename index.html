@@ -74,8 +74,14 @@
       }
 
       dialog {
+        min-width: 300px;
         border: 1px solid whitesmoke;
         border-radius: 4px;
+        padding: 24px;
+      }
+
+      dialog button {
+        margin-top: 16px;
       }
 
       dialog h2 {
@@ -189,6 +195,11 @@
             })
         }
       )
+
+      function test() {
+        alert('test');
+        References[Elements.ExceptionDialog].close()
+      }
     </script>
   </head>
 
@@ -232,12 +243,13 @@
 
         <dialog id="success-dialog">
           <h2>Intervention créée</h2>
-<!--  button to close the tab-->
+          <button onclick="window.close()">Fermer</button>
         </dialog>
 
         <dialog id="exception-dialog">
           <h2>Erreur</h2>
-<!--     check that is non blocking, button to try again      -->
+          <p>Merci de réessayer dans quelques minutes</p>
+          <button onclick="document.getElementById('exception-dialog').close()">OK</button>
         </dialog>
       </section>
     </main>
