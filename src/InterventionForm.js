@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useEquipement } from './EquipementContext'; // Import useEquipement hook
 
 const InterventionForm = () => {
+  const { equipmentId } = useEquipement();
   const [formData, setFormData] = useState({
     name: '',
     company: '',
     phone: '',
     file: null,
-    equipment_id: '1',
+    equipment_id: equipmentId,
   });
-
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
     const storedName = localStorage.getItem('name');
@@ -23,10 +25,26 @@ const InterventionForm = () => {
     if (storedCompany) setFormData(prev => ({ ...prev, company: storedCompany }));
     if (storedPhone) setFormData(prev => ({ ...prev, phone: storedPhone }));
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const equipmentId = urlParams.get('equipment_id');
-    if (equipmentId) setFormData(prev => ({ ...prev, equipment_id: equipmentId }));
-  }, []);
+    const fetchImage = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/equipement-images/${equipmentId}`);
+        if (response.data.length > 0) {
+          // Sort images by created_at in descending order
+          const sortedImages = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          // Get the URL of the latest image
+          const latestImageUrl = sortedImages[0].photo_url;
+          setImageUrl(latestImageUrl);
+          console.log('Latest image URL:', latestImageUrl);
+        } else {
+          console.error('No image found for equipment ID:', equipmentId);
+        }
+      } catch (error) {
+        console.error('Error fetching image:', error);
+      }
+    };
+    
+    fetchImage();
+  }, [equipmentId]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -71,10 +89,11 @@ const InterventionForm = () => {
   return (
     <main style={styles.main}>
       <section style={styles.section}>
-      <div style={styles.imageContainer}>
-          <img src="assets/shelter_test.jpg" alt="Equipement" style={styles.image} />
-        </div>
-        {/*<img className="logo" src="assets/logo.png" alt="Logo of a company named PRIMIZ network" />*/}
+        {imageUrl && (
+          <div style={styles.imageContainer}>
+            <img src={imageUrl} alt="Equipement" style={styles.image} />
+          </div>
+        )}
         <h1>Création d'intervention</h1>
         <form onSubmit={handleSubmit}>
           <div role="group">
@@ -121,30 +140,25 @@ const InterventionForm = () => {
 const styles = {
   main: {
     display: 'flex',
-    flexDirection: 'column', // Ensure children stack vertically
+    flexDirection: 'column',
     alignItems: 'center',
-    minHeight: '100vh', // Use minHeight instead of height to ensure the section takes up at least the viewport height
+    minHeight: '100vh',
   },
   section: {
-    maxWidth: '400px', // Set maximum width for better readability on smaller screens
-    width: '90%', // Adjust the width as needed for responsiveness
-    textAlign: 'center', // Center the content horizontally
+    maxWidth: '400px',
+    width: '90%',
+    textAlign: 'center',
   },
   image: {
-    maxWidth: '100%', // Ensure the image fits within its container
-    height: 'auto', // Maintain aspect ratio
-    margin: 0, // Remove any default margin to eliminate gaps
-    padding: 0, // Remove any default padding to eliminate gaps
+    maxWidth: '100%',
+    height: 'auto',
+    margin: 0,
+    padding: 0,
   },
   imageContainer: {
     margin: '20px',
-    marginBottom: '20px', // Add some spacing between the image and the form
-  },
-  image: {
-    maxWidth: '100%', // Ensure the image fits within its container
-    height: 'auto', // Maintain aspect ratio
+    marginBottom: '20px',
   },
 };
 
 export default InterventionForm;
-

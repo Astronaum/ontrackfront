@@ -8,7 +8,7 @@ const Navbar = ({ onNavigate }) => {
       <div style={styles.logoContainer} onClick={() => onNavigate('interventionForm')}>
         <LogoIcon style={styles.icon} />
       </div>
-      <span style={styles.label}>OnTrack</span> {/* Label "OnTrack" */}
+      <span style={styles.label}>OnTRACK</span> {/* Label "OnTrack" */}
       <div style={styles.settingsContainer} onClick={() => onNavigate('parametres')}>
         <SettingsIcon style={styles.icon} />
       </div>
