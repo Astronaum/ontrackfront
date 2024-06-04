@@ -5,6 +5,7 @@
 body {
   margin: 0;
   font-family: sans-serif;
+  user-select: none;
 }
 
 div[role='group'] {
@@ -79,4 +80,20 @@ dialog h2 {
 
 .App {
   text-align: center;
+}
+
+.red-hat-display-onTRACK{
+  font-family: "Red Hat Display", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 750;
+  font-style: normal;
+  color: white;
+}
+
+.red-hat-display-section{
+  font-family: "Red Hat Display", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  color: black;
 }

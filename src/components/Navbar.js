@@ -1,17 +1,25 @@
-import React from 'react';
-import { ReactComponent as SettingsIcon } from '../icons/sett.svg'; // Make sure you have the SVG for the settings icon
-import { ReactComponent as LogoIcon } from '../icons/logo_optimiz.svg'; // Assuming you have an SVG logo icon
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { ReactComponent as SettingsIcon } from '../icons/sett.svg'; // Assurez-vous d'avoir l'icône SVG pour les paramètres
+import { ReactComponent as LogoIcon } from '../icons/logo_optimiz.svg'; // En supposant que vous ayez une icône SVG de logo
+import { FaCog } from 'react-icons/fa'; // Import the cog icon from react-icons/fa
 
-const Navbar = ({ onNavigate }) => {
+const Navbar = () => {
+  const [isClicked, setIsClicked] = useState(false);
+
+  const handleClick = () => {
+    setIsClicked(!isClicked);
+  };
+
   return (
     <nav style={styles.navbar}>
-      <div style={styles.logoContainer} onClick={() => onNavigate('interventionForm')}>
+      <Link to="/" style={styles.logoContainer}>
         <LogoIcon style={styles.icon} />
-      </div>
-      <span style={styles.label}>OnTRACK</span> {/* Label "OnTrack" */}
-      <div style={styles.settingsContainer} onClick={() => onNavigate('parametres')}>
-        <SettingsIcon style={styles.icon} />
-      </div>
+      </Link>
+      <span className="red-hat-display-onTRACK" >OnTRACK</span> {/* Label "OnTrack" */}
+      <Link to="/parametres" style={{ ...styles.settingsContainer, transform: isClicked ? 'rotate(360deg)' : 'rotate(0deg)' }} onClick={handleClick}>
+        <FaCog style={styles.icon} />
+      </Link>
     </nav>
   );
 };
@@ -23,13 +31,14 @@ const styles = {
     alignItems: 'center',
     padding: '0 20px',
     height: '60px',
-    backgroundColor: '#A6D4E2'
+    backgroundColor: '#053465',
   },
   logoContainer: {
     cursor: 'pointer'
   },
   settingsContainer: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: 'transform 0.3s ease' // Add a transition for the animation effect
   },
   icon: {
     height: '30px',
@@ -37,9 +46,10 @@ const styles = {
     fill: 'white'
   },
   label: {
-    color: '#2895b6',
-    fontSize: '20px', // Adjust font size as needed
+    color: '#ffffff',
+    fontSize: '16px', // Adjust font size as needed
     fontWeight: 'bold', // Optionally, set font weight to bold
+    fontFamily: "'Roboto', sans-serif" // Set the custom font family
   }
 };
 
