@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useEquipement } from '../EquipementContext'; // Import useEquipement hook
-import 'react-responsive-carousel/lib/styles/carousel.min.css'; // Import carousel styles
+import { useEquipement } from '../EquipementContext'; 
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; 
 import { Carousel } from 'react-responsive-carousel';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 const Historique = () => {
   const { equipmentId } = useEquipement();
   const [interventions, setInterventions] = useState([]);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     const fetchInterventions = async () => {
       try {
         const response = await axios.get(`http://localhost:8000/api/interventions/${equipmentId}`);
-        console.log('Interventions response:', response.data); // Log the response data
+        console.log('Interventions response:', response.data); 
         setInterventions(response.data);
       } catch (error) {
         console.error('Error fetching interventions:', error);
@@ -22,6 +24,8 @@ const Historique = () => {
     fetchInterventions();
   }, [equipmentId]);
 
+  const displayedInterventions = showAll ? interventions : interventions.slice(0, 2);
+
   return (
     <div style={styles.main}>
       <div style={styles.titleContainer}>
@@ -29,7 +33,7 @@ const Historique = () => {
         <span className="material-symbols-outlined" style={styles.icon}>history</span>
       </div>
       <div style={styles.cardsContainer}>
-        {interventions.map(intervention => (
+        {displayedInterventions.map(intervention => (
           <div key={intervention.id} style={styles.card}>
             <div style={styles.cardContent}>
               <h2>{intervention.name}</h2>
@@ -48,18 +52,28 @@ const Historique = () => {
           </div>
         ))}
       </div>
+      {interventions.length > 3 && (
+        <div style={styles.showMoreContainer}>
+          <button onClick={() => setShowAll(!showAll)} style={styles.showMoreButton}>
+            {showAll ? (
+              <>
+                Voir moins <FaChevronUp />
+              </>
+            ) : (
+              <>
+                Voir plus <FaChevronDown />
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
 
 const styles = {
-  main:{
+  main: {
     backgroundColor: '#f4f4f9',
-  },
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
     padding: '20px',
   },
   titleContainer: {
@@ -96,7 +110,7 @@ const styles = {
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
   cardContent: {
-    textAlign: 'left', // Align text to the left
+    textAlign: 'left', 
     marginBottom: '10px',
   },
   carousel: {
@@ -105,6 +119,21 @@ const styles = {
   carouselImage: {
     width: '100%',
     height: 'auto',
+  },
+  showMoreContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '20px',
+  },
+  showMoreButton: {
+    padding: '10px 20px',
+    fontSize: '16px',
+    color: '#fff',
+    backgroundColor: '#053465',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease',
   },
 };
 

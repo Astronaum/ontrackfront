@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useEquipement } from './EquipementContext';
-import { FaHistory } from 'react-icons/fa';
+import { FaHistory, FaUser, FaBuilding, FaPhone, FaFileImage, FaComment } from 'react-icons/fa';
 
 const InterventionForm = () => {
   const { equipmentId } = useEquipement();
@@ -138,7 +138,9 @@ const InterventionForm = () => {
         </div>
       )}
 
+      <WelcomeCard equipmentId={equipmentId} />
       <section style={styles.section}>
+
         {imageUrl && (
           <div style={styles.imageFrame}>
             <div style={styles.imageContainer}>
@@ -153,29 +155,84 @@ const InterventionForm = () => {
         <h1 style={styles.heading}>Création d'intervention</h1>
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.formGroup}>
-            <label htmlFor="name" style={styles.label}>Nom</label>
+            <label htmlFor="name" style={styles.label}>
+              <FaUser style={styles.icon} /> 
+              <span style={styles.labelText}>Nom</span>
+            </label>
             <input id="name" name="name" type="text" required value={formData.name} onChange={handleChange} style={styles.input} />
           </div>
           <div style={styles.formGroup}>
-            <label htmlFor="company" style={styles.label}>Entreprise</label>
+            <label htmlFor="company" style={styles.label}>
+              <FaBuilding style={styles.icon} />
+              <span style={styles.labelText}>Entreprise</span>
+            </label>
             <input id="company" name="company" type="text" required value={formData.company} onChange={handleChange} style={styles.input} />
           </div>
           <div style={styles.formGroup}>
-            <label htmlFor="phone" style={styles.label}>Téléphone</label>
+            <label htmlFor="phone" style={styles.label}>
+              <FaPhone style={styles.icon} />
+              <span style={styles.labelText}>Téléphone</span>
+            </label>
             <input id="phone" name="phone" type="tel" required value={formData.phone} onChange={handleChange} style={styles.input} />
           </div>
           <div style={styles.formGroup}>
-            <label htmlFor="files" style={styles.label}>Photos</label>
+            <label htmlFor="files" style={styles.label}>
+              <FaFileImage style={styles.icon} />
+              <span style={styles.labelText}>Photos</span>
+            </label>
             <input id="files" name="files" type="file" multiple capture required onChange={handleChange} style={styles.inputFile} />
           </div>
           <div style={styles.formGroup}>
-            <label htmlFor="commentaire" style={styles.label}>Commentaire</label>
+            <label htmlFor="commentaire" style={styles.label}>
+              <FaComment style={styles.icon} />
+              <span style={styles.labelText}>Commentaire</span>
+            </label>
             <textarea id="commentaire" name="commentaire" value={formData.commentaire} onChange={handleChange} style={styles.textarea} />
           </div>
           <button type="submit" style={styles.button}>Enregistrer</button>
         </form>
       </section>
     </main>
+  );
+};
+
+const WelcomeCard = ({ equipmentId }) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentDate(new Date());
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const formattedDate = currentDate.toLocaleDateString('fr-FR', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  const formattedTime = currentDate.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  const [day, ...restOfDate] = formattedDate.split(' ');
+  const formattedDateWithCapitalDay = [capitalizeFirstLetter(day), ...restOfDate].join(' ');
+
+  return (
+    <div style={styles.welcomeCard}>
+      <h2>Bienvenue sur l'équipement</h2>
+      <p>{equipmentId}</p>
+      <p>{formattedDateWithCapitalDay} | {formattedTime}</p>
+    </div>
   );
 };
 
@@ -221,7 +278,7 @@ const styles = {
     zIndex: '1',
   },
   icon: {
-    fontSize: '24px',
+    fontSize: '20px',
     color: 'white',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: '50%',
@@ -235,10 +292,15 @@ const styles = {
     marginBottom: '15px',
   },
   label: {
-    display: 'block',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
     marginBottom: '5px',
     fontSize: '14px',
     color: '#333',
+  },
+  labelText: {
+    marginLeft: '10px',
   },
   input: {
     width: '100%',
@@ -288,6 +350,19 @@ const styles = {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 1000,
   },
+  welcomeCard: {
+    marginBottom: '10px',
+    padding: '1px',
+    backgroundColor: '#053465',
+    borderRadius: '8px',
+    maxWidth: '500px',
+    width: '100%',
+    textAlign: 'center',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
+    marginTop: '10px',
+    color: '#fff',
+  },
 };
 
 export default InterventionForm;
+
