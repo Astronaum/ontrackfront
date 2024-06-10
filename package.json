@@ -21,6 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "serve": "serve -s build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -48,6 +49,7 @@
     "eslint-loader": "^4.0.2",
     "react-responsive-carousel": "^3.2.23",
     "react-slick": "^0.30.2",
+    "serve": "^14.2.3",
     "slick-carousel": "^1.8.1",
     "tailwindcss": "^3.4.3",
     "webpack": "^4.42.0"
