@@ -84,7 +84,6 @@ const InterventionForm = () => {
     setError(false);
 
     const data = new FormData();
-    formData.append('equipment_id', equipmentId); // Use equipmentId from context
     Object.keys(formData).forEach(key => {
       if (key === 'files') {
         formData[key].forEach(file => {
@@ -94,7 +93,7 @@ const InterventionForm = () => {
         data.append(key, formData[key]);
       }
     });
-    console.log('id:',formData.equipment_id);
+    console.log('id:',data.equipment_id);
     try {
       const response = await axios.post('https://oncore-preprod-api.cloud.optimiz-network.fr/api/interventions', data, {
         headers: {
