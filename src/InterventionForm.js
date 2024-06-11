@@ -93,7 +93,7 @@ const InterventionForm = () => {
         data.append(key, formData[key]);
       }
     });
-
+    console.log('id:',formData.equipment_id);
     try {
       const response = await axios.post('https://oncore-preprod-api.cloud.optimiz-network.fr/api/interventions', data, {
         headers: {
