@@ -12,7 +12,7 @@ const InterventionForm = () => {
     company: '',
     phone: '',
     files: [],
-    equipment_id: equipmentId,
+    equipment_id: useEquipement(),
     commentaire: '',
   });
   const [loading, setLoading] = useState(false);
