@@ -6,6 +6,7 @@ import { FaHistory, FaUser, FaBuilding, FaPhone, FaFileImage, FaComment } from '
 
 const InterventionForm = () => {
   const { equipmentId } = useEquipement();
+  console.log(equipmentId);
   const [formData, setFormData] = useState({
     name: '',
     company: '',
