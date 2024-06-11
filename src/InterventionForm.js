@@ -84,7 +84,7 @@ const InterventionForm = () => {
     setError(false);
 
     const data = new FormData();
-    data.append('equipment_id', equipmentId); // Use equipmentId from context
+    formData.append('equipment_id', equipmentId); // Use equipmentId from context
     Object.keys(formData).forEach(key => {
       if (key === 'files') {
         formData[key].forEach(file => {
