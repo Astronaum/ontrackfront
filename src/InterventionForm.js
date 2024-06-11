@@ -22,6 +22,10 @@ const InterventionForm = () => {
   const [interventions, setInterventions] = useState([]);
 
   useEffect(() => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      equipment_id: equipmentId,
+    }));
     const storedName = localStorage.getItem('name');
     const storedCompany = localStorage.getItem('company');
     const storedPhone = localStorage.getItem('phone');
