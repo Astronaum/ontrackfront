@@ -56,7 +56,7 @@ const InterventionForm = () => {
     };
 
     fetchImage();
-    //fetchInterventions();
+    fetchInterventions();
   }, [equipmentId]);
 
   const handleChange = (e) => {
