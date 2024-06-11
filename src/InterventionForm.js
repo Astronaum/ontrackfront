@@ -180,7 +180,7 @@ const InterventionForm = () => {
               <FaFileImage style={styles.icon} />
               <span style={styles.labelText}>Photos</span>
             </label>
-            <input id="files" name="files" type="file" multiple capture required onChange={handleChange} style={styles.inputFile} />
+            <input id="files" name="files" type="file" multiple required onChange={handleChange} style={styles.inputFile} />
           </div>
           <div style={styles.formGroup}>
             <label htmlFor="commentaire" style={styles.label}>
