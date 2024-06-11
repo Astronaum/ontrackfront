@@ -22,10 +22,6 @@ const InterventionForm = () => {
   const [interventions, setInterventions] = useState([]);
 
   useEffect(() => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      equipment_id: equipmentId,
-    }));
     const storedName = localStorage.getItem('name');
     const storedCompany = localStorage.getItem('company');
     const storedPhone = localStorage.getItem('phone');
@@ -97,7 +93,7 @@ const InterventionForm = () => {
         data.append(key, formData[key]);
       }
     });
-    console.log('id:',data.equipment_id);
+    console.log('envoie:',data);
     try {
       const response = await axios.post('https://oncore-preprod-api.cloud.optimiz-network.fr/api/interventions', data, {
         headers: {
