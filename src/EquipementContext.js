@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 const EquipementContext = createContext();
 
 export const EquipementProvider = ({ children }) => {
-  const [equipmentId, setEquipmentId] = useState('1'); // Default value
+  const [equipmentId, setEquipmentId] = useState(null); // Default value
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
