@@ -36,6 +36,7 @@ const InterventionForm = () => {
         if (response.data.length > 0) {
           const sortedImages = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
           const latestImageUrl = sortedImages[0].photo_url;
+          console.log(latestImageUrl);
           //const latestImageUrl2 = latestImageUrl.replace("172.28.79.16/", 'http://localhost:8000/');
           setImageUrl(latestImageUrl);
         } else {

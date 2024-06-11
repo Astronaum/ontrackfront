@@ -7,7 +7,7 @@ export const EquipementProvider = ({ children }) => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const id = params.get('equipement_id');
+    const id = params.get('equipment_id');
     if (id) {
       setEquipmentId(id);
     }
