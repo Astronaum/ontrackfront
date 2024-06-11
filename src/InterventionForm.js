@@ -91,24 +91,6 @@ const InterventionForm = () => {
         data.append(key, formData[key]);
       }
     });
-
-    try {
-      const response = await axios.post('https://oncore-preprod-api.cloud.optimiz-network.fr/api/interventions', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      setLoading(false);
-      setSuccess(true);
-      localStorage.setItem('name', formData.name);
-      localStorage.setItem('company', formData.company);
-      localStorage.setItem('phone', formData.phone);
-      console.log('Response:', response.data);
-    } catch (error) {
-      setLoading(false);
-      setError(true);
-      console.error('Error:', error.response ? error.response.data : error.message);
-    }
   };
 
   return (
