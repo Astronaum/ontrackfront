@@ -32,7 +32,7 @@ const InterventionForm = () => {
 
     const fetchImage = async () => {
       try {
-        const response = await axios.get(`https://oncore-preprod-api.cloud.optimiz-network.fr/api/equipement-images/${equipmentId}`);
+        const response = await axios.get(`https://oncore.optimiz-network.fr/api/equipement-images/${equipmentId}`);
         if (response.data.length > 0) {
           const sortedImages = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
           const latestImageUrl = sortedImages[0].photo_url;
@@ -49,7 +49,7 @@ const InterventionForm = () => {
 
     const fetchInterventions = async () => {
       try {
-        const response = await axios.get(`https://oncore-preprod-api.cloud.optimiz-network.fr/api/interventions/${equipmentId}`);
+        const response = await axios.get(`https://oncore.optimiz-network.fr/api/interventions/${equipmentId}`);
         console.log('Interventions response:', response.data);
         setInterventions(response.data);
       } catch (error) {
@@ -96,7 +96,7 @@ const InterventionForm = () => {
     data.append('equipment_id', equipmentId);
     console.log('envoie:',data);
     try {
-      const response = await axios.post('https://oncore-preprod-api.cloud.optimiz-network.fr/api/interventions', data, {
+      const response = await axios.post('https://oncore.optimiz-network.fr/api/interventions', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

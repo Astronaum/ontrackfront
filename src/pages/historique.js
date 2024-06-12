@@ -13,7 +13,7 @@ const Historique = () => {
   useEffect(() => {
     const fetchInterventions = async () => {
       try {
-        const response = await axios.get(`https://oncore-preprod-api.cloud.optimiz-network.fr/api/interventions/${equipmentId}`);
+        const response = await axios.get(`https://oncore.optimiz-network.fr/api/interventions/${equipmentId}`);
         console.log('Interventions response:', response.data); 
         setInterventions(response.data);
       } catch (error) {

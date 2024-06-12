@@ -20,7 +20,7 @@ const Parametres = () => {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('https://oncore-preprod-api.cloud.optimiz-network.fr/api/equipement-images', formData, {
+      const response = await axios.post('https://oncore.optimiz-network.fr/api/equipement-images', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
