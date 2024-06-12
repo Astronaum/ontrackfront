@@ -20,6 +20,7 @@ const InterventionForm = () => {
   const [error, setError] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [interventions, setInterventions] = useState([]);
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   useEffect(() => {
     const storedName = localStorage.getItem('name');
@@ -50,8 +51,8 @@ const InterventionForm = () => {
     const fetchInterventions = async () => {
       try {
         const response = await axios.get(`https://oncore.optimiz-network.fr/api/interventions/${equipmentId}`);
-        console.log('Interventions response:', response.data);
-        setInterventions(response.data);
+        const sortedInterventions = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        setInterventions(sortedInterventions);
       } catch (error) {
         console.error('Error fetching interventions:', error);
       }
@@ -113,7 +114,14 @@ const InterventionForm = () => {
       console.error('Error:', error.response ? error.response.data : error.message);
     }
   };
+    const handleImageClick = (photoUrl) => {
+      setLightboxImage(photoUrl);
+    };
 
+    // Fonction pour fermer la lightbox
+    const closeLightbox = () => {
+      setLightboxImage(null);
+    };
   return (
     <main style={styles.main} className="red-hat-display-section">
       {loading && (
@@ -143,8 +151,7 @@ const InterventionForm = () => {
 
       <WelcomeCard equipmentId={equipmentId} />
       <section style={styles.section}>
-
-        {imageUrl && (
+      {imageUrl && (
           <div style={styles.imageFrame}>
             <div style={styles.imageContainer}>
               <img src={imageUrl} alt="Equipement" style={styles.image} />
@@ -154,7 +161,44 @@ const InterventionForm = () => {
             </div>
           </div>
         )}
+      </section>
+      <section style={styles.section}>
+      <div style={styles.interventionListContainer}>
+        <h1>Dernière Intervention</h1>
+        <div style={styles.interventionCard}>
+          <div style={styles.interventionCardTop}>
+            <p style={styles.date}>{interventions.length > 0 ? new Date(interventions[0].created_at).toLocaleDateString() : ''}</p>
+            <div style={styles.thumbnailContainer}>
+              {/* Affichage des images de l'intervention */}
+              {interventions.length > 0 && interventions[0].photo_urls && interventions[0].photo_urls.map((photoUrl, index) => (
+                <img
+                  key={index}
+                  src={photoUrl}
+                  alt={`Photo ${index}`}
+                  style={styles.thumbnailImage}
+                  onClick={() => handleImageClick(photoUrl)}
+                />
+              ))}
+            </div>
+          </div>
+          <div style={styles.interventionCardBody}>
+            <p><strong>Nom:</strong> {interventions.length > 0 ? interventions[0].name : ''} - <strong>Entreprise:</strong> {interventions.length > 0 ? interventions[0].company : ''}</p>
+          </div>
+          <div style={styles.cardComment}>
+            <FaComment style={styles.commentIcon} />
+            <p style={styles.commentContent}>{interventions.length > 0 ? interventions[0].commentaire : ''}</p>
+          </div>
 
+        </div>
+      </div>
+    </section>
+
+      {lightboxImage && (
+        <div style={styles.lightboxContainer} onClick={closeLightbox}>
+          <img src={lightboxImage} alt="Lightbox" style={styles.lightboxImage} />
+        </div>
+      )}
+      <section style={styles.section}> 
         <h1 style={styles.heading}>Création d'intervention</h1>
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.formGroup}>
@@ -280,6 +324,20 @@ const styles = {
     right: '10px',
     zIndex: '1',
   },
+  cardComment: {
+    backgroundColor: '#f0f0f0',
+    padding: '10px',
+    borderRadius: '8px',
+    position: 'relative',
+    marginTop: '20px',
+  },
+  commentIcon: {
+    position: 'absolute',
+    top: '10px',
+    left: '10px',
+    zIndex: '1',
+    color: '#333',
+  },
   icon: {
     fontSize: '20px',
     color: 'white',
@@ -319,6 +377,21 @@ const styles = {
     color: '#333',
     border: '1px solid #ccc',
     borderRadius: '4px',
+  },
+  commentCard: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: '8px',
+    padding: '20px',
+    marginTop: '20px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  },
+  commentTitle: {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    marginBottom: '10px',
+  },
+  commentContent: {
+    fontSize: '16px',
   },
   inputFile: {
     width: '100%',
@@ -371,6 +444,29 @@ const styles = {
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
     marginTop: '10px',
     color: '#fff',
+  },
+  lightboxContainer: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9999,
+  },
+  lightboxImage: {
+    maxWidth: '90%',
+    maxHeight: '90%',
+    boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)',
+  },
+  thumbnailImage: {
+    maxWidth: '100px',
+    maxHeight: '100px',
+    margin: '5px',
+    cursor: 'pointer',
   },
 };
 

@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ReactComponent as SettingsIcon } from '../icons/sett.svg'; // Assurez-vous d'avoir l'icône SVG pour les paramètres
-import { ReactComponent as LogoIcon } from '../icons/logo_optimiz.svg'; // En supposant que vous ayez une icône SVG de logo
-import { FaCog } from 'react-icons/fa'; // Import the cog icon from react-icons/fa
+import { FaCog, FaHome } from 'react-icons/fa'; // Import the cog and home icon from react-icons/fa
 
 const Navbar = () => {
   const [isClicked, setIsClicked] = useState(false);
@@ -14,9 +12,11 @@ const Navbar = () => {
   return (
     <nav style={styles.navbar}>
       <Link to="/" style={styles.logoContainer}>
-        <LogoIcon style={styles.icon} />
+        <FaHome style={styles.icon} />
       </Link>
-      <span className="red-hat-display-onTRACK" >OnTRACK</span> {/* Label "OnTrack" */}
+      <span style={styles.logoTextContainer}>
+        <img src="../assets/logo.png" alt="OnTRACK" style={styles.logo} />
+      </span>
       <Link to="/parametres" style={{ ...styles.settingsContainer, transform: isClicked ? 'rotate(360deg)' : 'rotate(0deg)' }} onClick={handleClick}>
         <FaCog style={styles.icon} />
       </Link>
@@ -31,26 +31,34 @@ const styles = {
     alignItems: 'center',
     padding: '0 20px',
     height: '60px',
-    backgroundColor: '#053465',
+    backgroundColor: ' white',
+    borderBottom: '2px solid #053465',
   },
   logoContainer: {
-    cursor: 'pointer'
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+  },
+  logoTextContainer: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  logo: {
+    height: '40px', // Adjust the logo height as needed
+    width: 'auto', // Maintain aspect ratio
   },
   settingsContainer: {
+    display: 'flex',
+    alignItems: 'center',
     cursor: 'pointer',
-    transition: 'transform 0.3s ease' // Add a transition for the animation effect
+    transition: 'transform 0.3s ease', // Add a transition for the animation effect
   },
   icon: {
     height: '30px',
     width: '30px',
-    fill: 'white'
+    fill: 'gray',
   },
-  label: {
-    color: '#ffffff',
-    fontSize: '16px', // Adjust font size as needed
-    fontWeight: 'bold', // Optionally, set font weight to bold
-    fontFamily: "'Roboto', sans-serif" // Set the custom font family
-  }
 };
 
 export default Navbar;
