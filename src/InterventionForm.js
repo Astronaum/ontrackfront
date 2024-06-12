@@ -149,7 +149,7 @@ const InterventionForm = () => {
             <div style={styles.imageContainer}>
               <img src={imageUrl} alt="Equipement" style={styles.image} />
               <Link to="/historique" style={styles.iconLink}>
-                <FaHistory style={styles.icon} />
+                <FaHistory style={styles.icon2} />
               </Link>
             </div>
           </div>
@@ -284,6 +284,13 @@ const styles = {
     fontSize: '20px',
     color: 'white',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: '50%',
+    padding: '5px',
+  },
+  icon2: {
+    fontSize: '30px',
+    color: 'black',
+    backgroundColor: '#FFA500',
     borderRadius: '50%',
     padding: '5px',
   },
