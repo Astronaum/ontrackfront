@@ -29,7 +29,7 @@ const Historique = () => {
   return (
     <div style={styles.main}>
       <div style={styles.titleContainer}>
-        <h1 className="red-hat-display-section" style={styles.title}>Historique</h1>
+        <h1 className="red-hat-display-section" style={styles.title}>Historique des interventions</h1>
         <span className="material-symbols-outlined" style={styles.icon}>history</span>
       </div>
       <div style={styles.cardsContainer}>

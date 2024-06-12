@@ -160,7 +160,7 @@ const InterventionForm = () => {
           <div style={styles.formGroup}>
             <label htmlFor="name" style={styles.label}>
               <FaUser style={styles.icon} /> 
-              <span style={styles.labelText}>Nom</span>
+              <span style={styles.labelText}>Nom et Prénom</span>
             </label>
             <input id="name" name="name" type="text" required value={formData.name} onChange={handleChange} style={styles.input} />
           </div>

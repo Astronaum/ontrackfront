@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useEquipement } from '../EquipementContext'; // Import useEquipement hook
-import { FaCog } from 'react-icons/fa'; // Utilisation de react-icons
+import { useEquipement } from '../EquipementContext';
+import { FaCog, FaFile, FaLock } from 'react-icons/fa';
 
 const Parametres = () => {
-  const { equipmentId } = useEquipement(); // Get the equipmentId from the context
+  const { equipmentId } = useEquipement();
   const [file, setFile] = useState(null);
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -13,11 +14,9 @@ const Parametres = () => {
     setFile(e.target.files[0]);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     const formData = new FormData();
-    formData.append('equipement_id', equipmentId); // Use equipmentId from context
+    formData.append('equipement_id', equipmentId);
     formData.append('file', file);
 
     try {
@@ -35,6 +34,15 @@ const Parametres = () => {
     }
   };
 
+  const handleConfirm = () => {
+    // Vérification du mot de passe
+    if (password === '1234') { // Remplacez '1234' par votre mot de passe réel
+      handleSubmit();
+    } else {
+      setError('Mot de passe incorrect. Veuillez réessayer.');
+    }
+  };
+
   return (
     <div style={styles.main}>
       <div className="red-hat-display-section">
@@ -42,15 +50,17 @@ const Parametres = () => {
           <h1 className="red-hat-display-section" style={styles.title}>
             Paramètres
           </h1>
-          <FaCog style={styles.icon} /> {/* Utilisation de react-icons */}
+          <FaCog style={styles.icon} />
         </div>
         <div style={styles.container}>
-          <p style={styles.equipmentId}>Equipment ID: {equipmentId}</p> {/* Display equipmentId in a label */}
+          <p style={styles.equipmentId}>Equipment ID: {equipmentId}</p>
           {error && <p style={styles.error}>{error}</p>}
           {successMessage && <p style={styles.success}>{successMessage}</p>}
-          <form onSubmit={handleSubmit} style={styles.form}>
+          <form onSubmit={e => e.preventDefault()} style={styles.form}>
             <div style={styles.formGroup}>
-              <label htmlFor="file" style={styles.label}>File:</label>
+              <label htmlFor="file" style={styles.label}>
+                <FaFile style={styles.icon} /> <span style={styles.labelText}>Fichier</span>
+              </label>
               <input
                 type="file"
                 id="file"
@@ -58,7 +68,19 @@ const Parametres = () => {
                 style={styles.input}
               />
             </div>
-            <button type="submit" style={styles.button}>Upload Equipement Image</button>
+            <div style={styles.formGroup}>
+              <label htmlFor="password" style={styles.label}>
+                <FaLock style={styles.icon} /> <span style={styles.labelText}>Pin</span>
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={styles.input}
+              />
+            </div>
+            <button type="button" onClick={handleConfirm} style={styles.button}>Confirmer</button>
           </form>
         </div>
       </div>
@@ -69,8 +91,8 @@ const Parametres = () => {
 const styles = {
   main: {
     backgroundColor: '#f4f4f9',
-    minHeight: '100vh', // Ensure it covers the full height of the viewport
-    padding: '20px 0', // Add some padding for spacing
+    minHeight: '100vh',
+    padding: '20px 0',
   },
   container: {
     maxWidth: '600px',
@@ -82,7 +104,7 @@ const styles = {
   },
   titleContainer: {
     display: 'flex',
-    alignItems: 'center', // Aligner les éléments sur la même ligne
+    alignItems: 'center',
     marginBottom: '20px',
     padding: '15px',
   },
@@ -91,11 +113,14 @@ const styles = {
     fontSize: '24px',
     fontWeight: 'bold',
     color: '#333',
-    marginRight: '10px', // Ajouter de la marge à droite pour séparer le titre de l'icône
+    marginRight: '10px',
   },
   icon: {
-    fontSize: '24px', // Taille de l'icône
-    color: '#333', // Couleur de l'icône
+    fontSize: '20px',
+    color: 'white',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: '50%',
+    padding: '5px',
   },
   equipmentId: {
     marginBottom: '20px',
@@ -110,10 +135,15 @@ const styles = {
     marginBottom: '15px',
   },
   label: {
-    display: 'block',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
     marginBottom: '5px',
     fontSize: '14px',
     color: '#333',
+  },
+  labelText: {
+    marginLeft: '10px',
   },
   input: {
     width: '100%',
