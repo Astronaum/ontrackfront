@@ -53,6 +53,7 @@ const Parametres = () => {
           <FaCog style={styles.icon} />
         </div>
         <div style={styles.container}>
+          <h1 style={styles.heading}>Changement de l'image de l'équipement</h1>
           <p style={styles.equipmentId}>Equipment ID: {equipmentId}</p>
           {error && <p style={styles.error}>{error}</p>}
           {successMessage && <p style={styles.success}>{successMessage}</p>}
@@ -114,6 +115,11 @@ const styles = {
     fontWeight: 'bold',
     color: '#333',
     marginRight: '10px',
+  },
+  heading: {
+    marginBottom: '20px',
+    fontSize: '24px',
+    color: '#333',
   },
   icon: {
     fontSize: '20px',
